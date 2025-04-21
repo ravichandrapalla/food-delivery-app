@@ -1,3 +1,54 @@
+// import { Button } from "antd";
+import { useRef, useState } from "react";
+import Banner from "../../components/ui/Banner";
+import Button from "../../components/ui/Button";
+
 export default function SignUp() {
-  return <h1 className="font-normal">Montserrat </h1>;
+  const [slides, setSlides] = useState([1, 2, 3, 4, 5]);
+  const [finalSlide, setIsFinalSlide] = useState(false);
+  const carouselRef = useRef();
+
+  const handleClick = (sign) => {
+    if (sign === "next") {
+      carouselRef.current?.next();
+      return;
+    }
+    carouselRef.current?.prev();
+  };
+  const handleIsFinalSlide = (index) => {
+    if (index === slides.length - 1) {
+      setIsFinalSlide(true);
+      return;
+    }
+    setIsFinalSlide(false);
+    console.log("hii");
+  };
+  return (
+    <div className="w-full h-full flex flex-col space-y-4  items-center">
+      <div className="w-[100%] ">
+        <Banner
+          slides={slides}
+          carouselRef={carouselRef}
+          handleIsFinalSlide={handleIsFinalSlide}
+        />
+      </div>
+      {finalSlide ? (
+        <Button>GET STARTED</Button>
+      ) : (
+        <>
+          {" "}
+          <Button
+            variant="primary"
+            className="text-lg font-medium"
+            onClick={() => handleClick("next")}
+          >
+            Next
+          </Button>
+          <Button variant="secondary" onClick={() => handleClick("prev")}>
+            Skip
+          </Button>
+        </>
+      )}
+    </div>
+  );
 }

@@ -6,7 +6,7 @@ import HomeLogoBanner from "./components/HomeLogoBanner";
 
 function App() {
   return (
-    <div className="w-screen h-screen">
+    <div className="w-[calc(100vw-1rem)] h-screen m-auto">
       <Suspense fallback={<HomeLogoBanner />}>
         <Routes>
           <Route path="/" element={<SignUp />} />
