@@ -5,15 +5,22 @@ import { Suspense } from "react";
 import HomeLogoBanner from "./components/HomeLogoBanner";
 import WelcomeSlider from "./pages/auth/WelcomeSlider";
 import SignIn from "./pages/auth/SignIn";
+import SignUp from "./pages/auth/SignUp";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
     <div className="w-[calc(100vw-1rem)] h-screen m-auto">
       <Suspense fallback={<HomeLogoBanner />}>
-        <Routes>
-          <Route path="/" element={<WelcomeSlider />} />
-          <Route path="/sign-in" element={<SignIn />} />
-        </Routes>
+        <QueryClientProvider client={queryClient}>
+          <Routes>
+            <Route path="/" element={<WelcomeSlider />} />
+            <Route path="/sign-in" element={<SignIn />} />
+            <Route path="/sign-up" element={<SignUp />} />
+          </Routes>
+        </QueryClientProvider>
       </Suspense>
     </div>
   );

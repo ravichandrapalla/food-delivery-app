@@ -1,8 +1,9 @@
-// import { Button } from "antd";
-// import { useRef, useState } from "react";
-// import Banner from "../../components/ui/Banner";
-// import Button from "../../components/ui/Button";
+import SignUpForm from "../../components/forms/SignUpForm";
 
 export default function SignUp() {
-  return <h1>Hii</h1>;
+  return (
+    <div className="h-full bg-neutral-950 font-sans">
+      <SignUpForm />
+    </div>
+  );
 }

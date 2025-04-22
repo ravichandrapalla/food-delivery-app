@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import Button from "../../components/ui/Button";
 
 export default function SignIn() {
@@ -10,7 +11,7 @@ export default function SignIn() {
         <h2>Log In</h2>
         <p>Please sign-in to your existing account</p>
       </article>
-      <section className=" rounded-t-2xl px-4 py-4 bg-white h-[calc(100vh-30%)]">
+      <section className="flex  flex-col space-y-4 rounded-t-2xl px-4 py-4 bg-white h-[calc(100vh-30%)]">
         <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
           <div className="flex flex-col space-y-4">
             <label htmlFor="input-email" className="font-semibold text-xs">
@@ -42,8 +43,16 @@ export default function SignIn() {
               <span>Forget Password</span>
             </div>
           </div>
-          <Button type="submit">LOG IN</Button>
+          <div className="mt-4">
+            <Button type="submit">LOG IN</Button>
+          </div>
         </form>
+        <p className="self-center">
+          Dont have account ?{" "}
+          <Link to="/sign-up" className="font-semibold text-blue-600">
+            Signup
+          </Link>
+        </p>
       </section>
     </div>
   );
