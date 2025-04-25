@@ -3,6 +3,10 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Button from "../../components/ui/Button";
+import { signupapi, verifyOtp } from "../../services/api";
+import { useNavigate } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { addUser } from "../../redux/slices/userSlice";
 
 const signupSchema = z
   .object({
@@ -17,6 +21,7 @@ const signupSchema = z
   });
 
 export default function SignUpForm() {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -24,18 +29,44 @@ export default function SignUpForm() {
   } = useForm({
     resolver: zodResolver(signupSchema),
   });
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state?.userData?.user);
 
   const [showPassword, setShowPassword] = useState(false);
   const [showRetypePassword, setShowRetypePassword] = useState(false);
-  const [isOtpSent, setISOtpSent] = useState(true);
+  const [isOtpSent, setISOtpSent] = useState(false);
   const [otp, setOtp] = useState(["", "", "", ""]);
   const inputRef = useRef([]);
 
   const togglePassword = () => setShowPassword((prev) => !prev);
   const toggleRetypePassword = () => setShowRetypePassword((prev) => !prev);
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log("Form Data:", data);
+    try {
+      const resp = await signupapi(data);
+      const { message, data: respData } = resp.data;
+
+      if (resp.status === 201) {
+        // Signup successful
+        dispatch(addUser(data));
+        setISOtpSent(true);
+        console.log("User created. OTP sent.");
+      }
+
+      console.log(message, respData);
+      console.log("Response:", resp);
+    } catch (error) {
+      if (error.response && error.response.status === 403) {
+        // User already exists but not verified
+        dispatch(addUser(data));
+        setISOtpSent(true);
+        console.log("User exists but not verified. OTP resent.");
+        console.log("Message:", error.response.data.message);
+      } else {
+        console.error("Unexpected error:", error);
+      }
+    }
   };
   const handleOtpChange = (e, position) => {
     const { value } = e.target;
@@ -45,6 +76,11 @@ export default function SignUpForm() {
     if (position < otp.length - 1) {
       inputRef.current[position + 1].focus();
     }
+  };
+  const handleOtpValidate = () => {
+    const stringOtp = otp.join("");
+    console.log(stringOtp, "1");
+    verifyOtp(user?.email, stringOtp);
   };
 
   return (
@@ -73,7 +109,9 @@ export default function SignUpForm() {
                 />
               ))}
             </div>
-            <Button className="mt-4">Verify</Button>
+            <Button className="mt-4" onClick={handleOtpValidate}>
+              Verify
+            </Button>
           </div>
         ) : (
           <form

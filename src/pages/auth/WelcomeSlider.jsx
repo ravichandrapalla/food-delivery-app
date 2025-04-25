@@ -37,7 +37,6 @@ export default function WelcomeSlider() {
         <Button onClick={() => navigate("/sign-in")}>GET STARTED</Button>
       ) : (
         <>
-          {" "}
           <Button
             variant="primary"
             className="text-lg font-medium"
